@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import {useEffect} from 'react'
-import {Outlet, Link} from "react-router-dom"
+import {Outlet, Link, useLocation} from "react-router-dom"
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 
 const AuthLayout = () => {
+  const location = useLocation();
   useEffect(() => {
     const root = document.getElementById('root')
     if (root) {
@@ -17,9 +18,9 @@ const AuthLayout = () => {
   }, [])
 
   return (
-    <div className='d-flex flex-column flex-lg-row flex-column-fluid h-100'>
+    <div className={`d-flex flex-column flex-column-fluid shadow-sm rounded-2 login-container ${location.pathname.includes("registration") ? "flex-lg-row-reverse" : "flex-lg-row"}`}>
       {/* begin::Body */}
-      <div className='d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1'>
+      <div className='d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1 overflow-auto'>
         {/* begin::Form */}
         <div className='d-flex flex-center flex-column flex-lg-row-fluid'>
           {/* begin::Wrapper */}
@@ -31,9 +32,9 @@ const AuthLayout = () => {
         {/* end::Form */}
 
         {/* begin::Footer */}
-        <div className='d-flex flex-center flex-wrap px-5'>
+        {/* <div className='d-flex flex-center flex-wrap px-5'> */}
           {/* begin::Links */}
-          <div className='d-flex fw-semibold text-primary fs-base'>
+          {/* <div className='d-flex fw-semibold text-primary fs-base'>
             <a href='#' className='px-5' target='_blank'>
               Terms
             </a>
@@ -45,52 +46,58 @@ const AuthLayout = () => {
             <a href='#' className='px-5' target='_blank'>
               Contact Us
             </a>
-          </div>
+          </div> */}
           {/* end::Links */}
-        </div>
+        {/* </div> */}
         {/* end::Footer */}
       </div>
       {/* end::Body */}
 
       {/* begin::Aside */}
       <div
-        className='d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2'
-        style={{backgroundImage: `url(${toAbsoluteUrl('/media/misc/auth-bg.png')})`}}
+        className='d-flex flex-lg-row-fluid w-lg-50 order-1 order-lg-2 side-image-container rounded-2'
+        // style={{background: `linear-gradient( rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85) ), ${location.pathname.includes("registration") ? "url('/media/auth/loginImage1.jpg')" : "url('/media/auth/loginImage3.jpg')"}`}}
+        // style={{backgroundImage: `url(${toAbsoluteUrl('/media/misc/auth-bg.png')})`}}
       >
         {/* begin::Content */}
         <div className='d-flex flex-column flex-center py-15 px-5 px-md-15 w-100'>
           {/* begin::Logo */}
-          <Link to='/' className='mb-12'>
+          {/* <Link to='/' className='mb-12'>
             <img alt='Logo' src={toAbsoluteUrl('/media/logos/custom-1.png')} className='h-75px' />
-          </Link>
+          </Link> */}
           {/* end::Logo */}
 
           {/* begin::Image */}
-          <img
+          {/* <img
             className='mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20'
             src={toAbsoluteUrl('/media/misc/auth-screens.png')}
             alt=''
-          />
+          /> */}
           {/* end::Image */}
 
           {/* begin::Title */}
           <h1 className='text-white fs-2qx fw-bolder text-center mb-7'>
-            Fast, Efficient and Productive
+            {!location.pathname.includes("registration") && "Fast, Efficient and Productive"}
+            {location.pathname.includes("registration")&& "Easiest way to manage your finance"} 
           </h1>
           {/* end::Title */}
 
           {/* begin::Text */}
           <div className='text-white fs-base text-center'>
-            In this kind of post,{' '}
-            <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
+            {!location.pathname.includes("registration") && `We are committed to creating ${' '}
+            and ${<br />} sustaining long-term relatioships which drawn on our experience and experties to help
+            our clients achieve real success`}
+            {location.pathname.includes("registration") && `Talk about business stragety ${' '}
+             finance anywhere with our easy access apps`}
+            {/* <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
               the blogger
-            </a>
-            introduces a person they’ve interviewed <br /> and provides some background information
-            about
-            <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
+            </a> */}
+            {/* introduces a person they’ve interviewed <br /> and provides some background information
+            about */}
+            {/* <a href='#' className='opacity-75-hover text-warning fw-bold me-1'>
               the interviewee
-            </a>
-            and their <br /> work following this is a transcript of the interview.
+            </a> */}
+            {/* and their <br /> work following this is a transcript of the interview. */}
           </div>
           {/* end::Text */}
         </div>

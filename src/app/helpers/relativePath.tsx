@@ -1,0 +1,1 @@
+export const absolutePath = (pathname: string) => `/${pathname}`;

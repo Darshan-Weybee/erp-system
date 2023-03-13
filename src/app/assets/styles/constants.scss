@@ -1,0 +1,146 @@
+// media query
+
+$break-xs: "(max-width:575px)";
+$break-sm: "(min-width:576px) and (max-width:768px)";
+$break-md: "(min-width:768px) and (max-width:991px)";
+$break-lg: "(min-width:992px) and (max-width:1199px)";
+$break-xl: "(min-width:1200px) and (max-width:1399px)";
+$break-xxl: "(min-width:1400px)";
+$break-xxxl: "(min-width:1400px) and (max-width:1599px)";
+
+$break-sm-open: "(min-width:576px)";
+$break-md-open: "(min-width:768px)";
+$break-lg-open: "(min-width:992px)";
+$break-xl-open: "(min-width:1200px)";
+
+$break-sm-close: "(max-width:768px)";
+$break-md-close: "(max-width:991px)";
+$break-lg-close: "(max-width:1199px)";
+$break-xl-close: "(max-width:1399px)";
+
+// Font Family
+$primary-font: "Inter", "Helvetica", "sans-serif";
+$primary-color: #5e6278;
+
+// STYLING --> MIXINS
+@mixin head1 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 36px;
+}
+
+@mixin text1 {
+  font-family: $primary-font;
+  font-size: 36px;
+}
+
+@mixin head2 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 30px;
+}
+
+@mixin text2 {
+  font-family: $primary-font;
+  font-size: 30px;
+}
+
+@mixin head3 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+@mixin text3 {
+  font-family: $primary-font;
+  font-size: 22px;
+}
+
+@mixin head4 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+@mixin text4 {
+  font-family: $primary-font;
+  font-size: 18px;
+}
+
+@mixin head5 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@mixin text5 {
+  font-family: $primary-font;
+  font-size: 14px;
+}
+
+// STYLING --> CSS CLASSES
+.head1 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 36px;
+}
+
+.text1 {
+  font-family: $primary-font;
+  font-size: 36px;
+}
+
+.head2 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 30px;
+}
+
+.text2 {
+  font-family: $primary-font;
+  font-size: 30px;
+}
+
+.head3 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+.text3 {
+  font-family: $primary-font;
+  font-size: 22px;
+}
+
+.head4 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.text4 {
+  font-family: $primary-font;
+  font-size: 18px;
+}
+
+.head5 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.text5 {
+  font-family: $primary-font;
+  font-size: 14px;
+}
+
+.head6 {
+  font-family: $primary-font;
+  font-weight: 600;
+  font-size: 26px;
+}
+
+.text6 {
+  font-family: $primary-font;
+  font-size: 26px;
+}

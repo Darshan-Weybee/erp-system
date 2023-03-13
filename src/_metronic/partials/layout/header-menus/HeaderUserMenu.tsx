@@ -1,12 +1,18 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import {FC} from 'react'
-import {Link} from 'react-router-dom'
-import {useAuth} from '../../../../app/components/pages/auth'
-import {Languages} from './Languages'
-import {toAbsoluteUrl} from '../../../helpers'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../../../../app/components/pages/auth'
+import ImageDisplay from '../../../../app/components/commonComponent/ImageDisplay'
+import { connect } from 'react-redux'
+import { profileState } from '../../../../app/reducers/profile/profileReducer'
+import { absolutePath } from '../../../../app/helpers/relativePath'
+import { PROFILE_PAGE } from '../../../../app/helpers/routes'
 
-const HeaderUserMenu: FC = () => {
-  const {currentUser, logout} = useAuth()
+interface props {
+  profileDetails: profileState
+}
+
+const HeaderUserMenuCom: FC<props> = ({ profileDetails }) => {
+  const { currentUser, logout } = useAuth()
   return (
     <div
       className='menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px'
@@ -15,17 +21,16 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <img alt='Logo' src={toAbsoluteUrl('/media/avatars/300-1.jpg')} />
+            <ImageDisplay path={profileDetails.profilePicture} altText='profilePicture' className='' errorPath='/media/svg/avatars/blank.svg' />
           </div>
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
-              {currentUser?.first_name} {currentUser?.first_name}
-              <span className='badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2'>Pro</span>
+              {profileDetails?.profileData?.name ? profileDetails.profileData.name : "User Name"}
             </div>
-            <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
+            {/* <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
               {currentUser?.email}
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
@@ -33,21 +38,27 @@ const HeaderUserMenu: FC = () => {
       <div className='separator my-2'></div>
 
       <div className='menu-item px-5'>
-        <Link to={'/crafted/pages/profile'} className='menu-link px-5'>
+        <Link to={absolutePath(PROFILE_PAGE)} className='menu-link px-5'>
           My Profile
         </Link>
       </div>
 
       <div className='menu-item px-5'>
+        <a onClick={logout} className='menu-link px-5'>
+          Sign Out
+        </a>
+      </div>
+
+      {/* <div className='menu-item px-5'>
         <a href='#' className='menu-link px-5'>
           <span className='menu-text'>My Projects</span>
           <span className='menu-badge'>
             <span className='badge badge-light-danger badge-circle fw-bolder fs-7'>3</span>
           </span>
         </a>
-      </div>
+      </div> */}
 
-      <div
+      {/* <div
         className='menu-item px-5'
         data-kt-menu-trigger='hover'
         data-kt-menu-placement='left-start'
@@ -105,31 +116,31 @@ const HeaderUserMenu: FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className='menu-item px-5'>
+      {/* <div className='menu-item px-5'>
         <a href='#' className='menu-link px-5'>
           My Statements
         </a>
-      </div>
+      </div> */}
 
-      <div className='separator my-2'></div>
+      {/* <div className='separator my-2'></div> */}
 
-      <Languages />
+      {/* <Languages /> */}
 
-      <div className='menu-item px-5 my-1'>
+      {/* <div className='menu-item px-5 my-1'>
         <Link to='/crafted/account/settings' className='menu-link px-5'>
           Account Settings
         </Link>
-      </div>
-
-      <div className='menu-item px-5'>
-        <a onClick={logout} className='menu-link px-5'>
-          Sign Out
-        </a>
-      </div>
+      </div> */}
     </div>
   )
 }
+const mapStateToProps = (state: any) => {
+  return {
+    profileDetails: state.profile
+  }
+}
+const HeaderUserMenu = connect(mapStateToProps)(HeaderUserMenuCom)
 
-export {HeaderUserMenu}
+export { HeaderUserMenu }

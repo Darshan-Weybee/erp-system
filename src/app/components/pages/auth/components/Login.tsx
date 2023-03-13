@@ -1,12 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState} from 'react'
+import { FC, useState } from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
-import {useFormik} from 'formik'
-import {getUserByToken, login} from '../core/_requests'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {useAuth} from '../core/Auth'
+import { Link } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { useAuth } from '../core/Auth'
+import { connect } from 'react-redux'
+import { loginAction } from '../../../../reducers/login/loginAction'
+import { loginData } from '../../../../helpers/commonInterface'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -25,33 +26,42 @@ const initialValues = {
   password: 'demo',
 }
 
+interface props {
+  loginDispatch: Function
+}
+
 /*
   Formik+YUP+Typescript:
   https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
   https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
 */
 
-export function Login() {
+const Login: FC<props> = ({ loginDispatch }) => {
   const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const { saveAuth, setCurrentUser } = useAuth()
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: async (values, {setStatus, setSubmitting}) => {
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true)
-      try {
-        const {data: auth} = await login(values.email, values.password)
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token) 
-        setCurrentUser(user)
-      } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setStatus('The login details are incorrect')
-        setSubmitting(false)
-        setLoading(false)
-      }
+      // try {
+        // login api call
+        await loginDispatch({ email: values.email, password: values.password },
+          (result: any) => { saveAuth(result); setCurrentUser(result) },
+          () => {
+            saveAuth(undefined)
+            setStatus('The login details are incorrect')
+            setSubmitting(false)
+            setLoading(false)
+          })
+      // } catch (error) {
+      //   console.error(error)
+      //   saveAuth(undefined)
+      //   setStatus('The login details are incorrect')
+      //   setSubmitting(false)
+      //   setLoading(false)
+      // }
     },
   })
 
@@ -63,18 +73,19 @@ export function Login() {
       id='kt_login_signin_form'
     >
       {/* begin::Heading */}
-      <div className='text-center mb-11'>
+      <div className='mb-11'>
+        {/* <div className='text-center mb-11'> */}
         <h1 className='text-dark fw-bolder mb-3'>Sign In</h1>
-        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
+        {/* <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div> */}
       </div>
       {/* begin::Heading */}
 
       {/* begin::Login options */}
-      <div className='row g-3 mb-9'>
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
+      {/* <div className='row g-3 mb-9'> */}
+      {/* begin::Col */}
+      {/* <div className='col-md-6'> */}
+      {/* begin::Google link */}
+      {/* <a
             href='#'
             className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
           >
@@ -84,15 +95,15 @@ export function Login() {
               className='h-15px me-3'
             />
             Sign in with Google
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
+          </a> */}
+      {/* end::Google link */}
+      {/* </div> */}
+      {/* end::Col */}
 
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
+      {/* begin::Col */}
+      {/* <div className='col-md-6'> */}
+      {/* begin::Google link */}
+      {/* <a
             href='#'
             className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
           >
@@ -107,20 +118,20 @@ export function Login() {
               className='theme-dark-show h-15px me-3'
             />
             Sign in with Apple
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
-      </div>
+          </a> */}
+      {/* end::Google link */}
+      {/* </div> */}
+      {/* end::Col */}
+      {/* </div> */}
       {/* end::Login options */}
 
       {/* begin::Separator */}
-      <div className='separator separator-content my-14'>
+      {/* <div className='separator separator-content my-14'>
         <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
-      </div>
+      </div> */}
       {/* end::Separator */}
 
-      {formik.status ? (
+      {/* {formik.status ? (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
@@ -131,7 +142,7 @@ export function Login() {
             continue.
           </div>
         </div>
-      )}
+      )} */}
 
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
@@ -140,8 +151,8 @@ export function Login() {
           placeholder='Email'
           {...formik.getFieldProps('email')}
           className={clsx(
-            'form-control bg-transparent',
-            {'is-invalid': formik.touched.email && formik.errors.email},
+            'form-control bg-transparent login-form-input',
+            { 'is-invalid': formik.touched.email && formik.errors.email },
             {
               'is-valid': formik.touched.email && !formik.errors.email,
             }
@@ -166,7 +177,7 @@ export function Login() {
           autoComplete='off'
           {...formik.getFieldProps('password')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent login-form-input',
             {
               'is-invalid': formik.touched.password && formik.errors.password,
             },
@@ -207,7 +218,7 @@ export function Login() {
         >
           {!loading && <span className='indicator-label'>Continue</span>}
           {loading && (
-            <span className='indicator-progress' style={{display: 'block'}}>
+            <span className='indicator-progress' style={{ display: 'block' }}>
               Please wait...
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
@@ -217,7 +228,7 @@ export function Login() {
       {/* end::Action */}
 
       <div className='text-gray-500 text-center fw-semibold fs-6'>
-        Not a Member yet?{' '}
+        Not a Member yet?{' '} &nbsp;
         <Link to='/auth/registration' className='link-primary'>
           Sign up
         </Link>
@@ -225,3 +236,11 @@ export function Login() {
     </form>
   )
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    loginDispatch: (data: loginData, successCallback: Function, failureCallback: Function) =>
+      dispatch(loginAction(data, successCallback, failureCallback))
+  }
+}
+export default connect(null, mapDispatchToProps)(Login)

@@ -1,7 +1,14 @@
 import clsx from 'clsx'
+import { FC } from 'react'
+import { connect } from 'react-redux'
+import ImageDisplay from '../../../../app/components/commonComponent/ImageDisplay'
 import {KTSVG, toAbsoluteUrl} from '../../../helpers'
 import {HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher} from '../../../partials'
 import {useLayout} from '../../core'
+
+interface props {
+  profilePicture : any
+}
 
 const itemClass = 'ms-1 ms-lg-3'
 const btnClass =
@@ -9,7 +16,7 @@ const btnClass =
 const userAvatarClass = 'symbol-35px symbol-md-40px'
 const btnIconClass = 'svg-icon-1'
 
-const Navbar = () => {
+const NavbarCom:FC<props> = ({profilePicture}) => {
   const {config} = useLayout()
   return (
     <div className='app-navbar flex-shrink-0'>
@@ -53,12 +60,12 @@ const Navbar = () => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='' />
+          <ImageDisplay path={profilePicture} altText='profilePicture' className='' errorPath='/media/svg/avatars/blank.svg'/>
         </div>
         <HeaderUserMenu />
       </div>
 
-      {config.app?.header?.default?.menu?.display && (
+      {/* {config.app?.header?.default?.menu?.display && (
         <div className='app-navbar-item d-lg-none ms-2 me-n3' title='Show header menu'>
           <div
             className='btn btn-icon btn-active-color-primary w-35px h-35px'
@@ -67,9 +74,16 @@ const Navbar = () => {
             <KTSVG path='/media/icons/duotune/text/txt001.svg' className={btnIconClass} />
           </div>
         </div>
-      )}
+      )} */}
     </div>
   )
 }
 
+const mapStateToProps = (state : any) => {
+  return {
+    profilePicture : state.profile.profilePicture
+  }
+}
+
+const Navbar = connect(mapStateToProps)(NavbarCom)
 export {Navbar}

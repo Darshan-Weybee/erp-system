@@ -1,0 +1,32 @@
+//signUp
+export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
+export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
+export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
+
+//login
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILURE = "LOGIN_FAILURE";
+
+//add user
+export const ADD_USER_REQUEST = "ADD_USER_REQUEST";
+export const ADD_USER_SUCCESS = "ADD_USER_SUCCESS";
+export const ADD_USER_FAILURE = "ADD_USER_FAILURE";
+
+//edit profile
+export const EDIT_PROFILE_REQUEST = "EDIT_PROFILE_REQUEST";
+export const EDIT_PROFILE_SUCCESS = "EDIT_PROFILE_SUCCESS";
+export const EDIT_PROFILE_FAILURE = "EDIT_PROFILE_FAILURE";
+
+//get user list
+export const GET_USER_LIST_REQUEST = "GET_USER_LIST_REQUEST";
+export const GET_USER_LIST_SUCCESS = "GET_USER_LIST_SUCCESS";
+export const GET_USER_LIST_FAILURE = "GET_USER_LIST_FAILURE";
+
+//get profile data
+export const GET_PROFILE_REQUEST = "GET_PROFILE_REQUEST";
+export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
+export const GET_PROFILE_FAILURE = "GET_PROFILE_FAILURE";
+//get profile picture
+export const GET_PROFILE_PICTURE = "GET_PROFILE_PICTURE";
+

@@ -1,25 +1,28 @@
-/* eslint-disable react/jsx-no-target-blank */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import {useState, useEffect} from 'react'
-import {useFormik} from 'formik'
+import { useState, FC } from 'react'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {getUserByToken, register} from '../core/_requests'
-import {Link} from 'react-router-dom'
-import {toAbsoluteUrl} from '../../../../../_metronic/helpers'
-import {PasswordMeterComponent} from '../../../../../_metronic/assets/ts/components'
-import {useAuth} from '../core/Auth'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../core/Auth'
+import { connect } from 'react-redux'
+import { signUpAction } from "../../../../reducers/signup/signUpAction"
+import { signUpData } from '../../../../helpers/commonInterface'
+
+interface props {
+  signUpDispatch: Function
+}
 
 const initialValues = {
+  companyname: '',
   firstname: '',
   lastname: '',
   email: '',
   password: '',
   changepassword: '',
-  acceptTerms: false,
 }
 
 const registrationSchema = Yup.object().shape({
+  companyname: Yup.string().required('Company name is required'),
   firstname: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
@@ -43,28 +46,33 @@ const registrationSchema = Yup.object().shape({
       is: (val: string) => (val && val.length > 0 ? true : false),
       then: Yup.string().oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
     }),
-  acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
 })
 
-export function Registration() {
+const Registration: FC<props> = ({ signUpDispatch }) => {
   const [loading, setLoading] = useState(false)
-  const {saveAuth, setCurrentUser} = useAuth()
+  const { saveAuth, setCurrentUser } = useAuth()
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
-    onSubmit: async (values, {setStatus, setSubmitting}) => {
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true)
       try {
-        const {data: auth} = await register(
-          values.email,
-          values.firstname,
-          values.lastname,
-          values.password,
-          values.changepassword
+        // sign up api call
+        await signUpDispatch({
+          companyName: values.companyname,
+          email: values.email,
+          firstName: values.firstname,
+          lastName: values.lastname,
+          password: values.password
+        },
+          (result: any) => { saveAuth(result); setCurrentUser(result) },
+          () => {
+            saveAuth(undefined)
+            setStatus('The login details are incorrect')
+            setSubmitting(false)
+            setLoading(false)
+          }
         )
-        saveAuth(auth)
-        const {data: user} = await getUserByToken(auth.api_token)
-        setCurrentUser(user)
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
@@ -75,33 +83,33 @@ export function Registration() {
     },
   })
 
-  useEffect(() => {
-    PasswordMeterComponent.bootstrap()
-  }, [])
+  // useEffect(() => {
+  //   PasswordMeterComponent.bootstrap()
+  // }, [])
 
   return (
     <form
-      className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
+      className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework overflow-auto h-100'
       noValidate
       id='kt_login_signup_form'
       onSubmit={formik.handleSubmit}
     >
       {/* begin::Heading */}
-      <div className='text-center mb-11'>
+      <div className='mb-11'>
         {/* begin::Title */}
         <h1 className='text-dark fw-bolder mb-3'>Sign Up</h1>
         {/* end::Title */}
 
-        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
+        {/* <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div> */}
       </div>
       {/* end::Heading */}
 
       {/* begin::Login options */}
-      <div className='row g-3 mb-9'>
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
+      {/* <div className='row g-3 mb-9'> */}
+      {/* begin::Col */}
+      {/* <div className='col-md-6'> */}
+      {/* begin::Google link */}
+      {/* <a
             href='#'
             className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
           >
@@ -111,15 +119,15 @@ export function Registration() {
               className='h-15px me-3'
             />
             Sign in with Google
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
+          </a> */}
+      {/* end::Google link */}
+      {/* </div> */}
+      {/* end::Col */}
 
-        {/* begin::Col */}
-        <div className='col-md-6'>
-          {/* begin::Google link */}
-          <a
+      {/* begin::Col */}
+      {/* <div className='col-md-6'> */}
+      {/* begin::Google link */}
+      {/* <a
             href='#'
             className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
           >
@@ -134,16 +142,16 @@ export function Registration() {
               className='theme-dark-show h-15px me-3'
             />
             Sign in with Apple
-          </a>
-          {/* end::Google link */}
-        </div>
-        {/* end::Col */}
-      </div>
+          </a> */}
+      {/* end::Google link */}
+      {/* </div> */}
+      {/* end::Col */}
+      {/* </div> */}
       {/* end::Login options */}
 
-      <div className='separator separator-content my-14'>
+      {/* <div className='separator separator-content my-14'>
         <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
-      </div>
+      </div> */}
 
       {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
@@ -153,6 +161,31 @@ export function Registration() {
 
       {/* begin::Form group Firstname */}
       <div className='fv-row mb-8'>
+        <label className='form-label fw-bolder text-dark fs-6'>Company name</label>
+        <input
+          placeholder='Company name'
+          type='text'
+          autoComplete='off'
+          {...formik.getFieldProps('companyname')}
+          className={clsx(
+            'form-control bg-transparent login-form-input',
+            {
+              'is-invalid': formik.touched.companyname && formik.errors.companyname,
+            },
+            {
+              'is-valid': formik.touched.companyname && !formik.errors.companyname,
+            }
+          )}
+        />
+        {formik.touched.companyname && formik.errors.companyname && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.companyname}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className='fv-row mb-8'>
         <label className='form-label fw-bolder text-dark fs-6'>First name</label>
         <input
           placeholder='First name'
@@ -160,7 +193,7 @@ export function Registration() {
           autoComplete='off'
           {...formik.getFieldProps('firstname')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent login-form-input',
             {
               'is-invalid': formik.touched.firstname && formik.errors.firstname,
             },
@@ -187,7 +220,7 @@ export function Registration() {
           autoComplete='off'
           {...formik.getFieldProps('lastname')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent login-form-input',
             {
               'is-invalid': formik.touched.lastname && formik.errors.lastname,
             },
@@ -215,8 +248,8 @@ export function Registration() {
           autoComplete='off'
           {...formik.getFieldProps('email')}
           className={clsx(
-            'form-control bg-transparent',
-            {'is-invalid': formik.touched.email && formik.errors.email},
+            'form-control bg-transparent login-form-input',
+            { 'is-invalid': formik.touched.email && formik.errors.email },
             {
               'is-valid': formik.touched.email && !formik.errors.email,
             }
@@ -243,7 +276,7 @@ export function Registration() {
               autoComplete='off'
               {...formik.getFieldProps('password')}
               className={clsx(
-                'form-control bg-transparent',
+                'form-control bg-transparent login-form-input',
                 {
                   'is-invalid': formik.touched.password && formik.errors.password,
                 },
@@ -261,7 +294,7 @@ export function Registration() {
             )}
           </div>
           {/* begin::Meter */}
-          <div
+          {/* <div
             className='d-flex align-items-center mb-3'
             data-kt-password-meter-control='highlight'
           >
@@ -269,12 +302,12 @@ export function Registration() {
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2'></div>
             <div className='flex-grow-1 bg-secondary bg-active-success rounded h-5px'></div>
-          </div>
+          </div> */}
           {/* end::Meter */}
         </div>
-        <div className='text-muted'>
+        {/* <div className='text-muted'>
           Use 8 or more characters with a mix of letters, numbers & symbols.
-        </div>
+        </div> */}
       </div>
       {/* end::Form group */}
 
@@ -287,7 +320,7 @@ export function Registration() {
           autoComplete='off'
           {...formik.getFieldProps('changepassword')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent login-form-input',
             {
               'is-invalid': formik.touched.changepassword && formik.errors.changepassword,
             },
@@ -307,7 +340,7 @@ export function Registration() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      <div className='fv-row mb-8'>
+      {/* <div className='fv-row mb-8'>
         <label className='form-check form-check-inline' htmlFor='kt_login_toc_agree'>
           <input
             className='form-check-input'
@@ -334,7 +367,7 @@ export function Registration() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
       {/* end::Form group */}
 
       {/* begin::Form group */}
@@ -343,17 +376,17 @@ export function Registration() {
           type='submit'
           id='kt_sign_up_submit'
           className='btn btn-lg btn-primary w-100 mb-5'
-          disabled={formik.isSubmitting || !formik.isValid || !formik.values.acceptTerms}
+          disabled={formik.isSubmitting || !formik.isValid}
         >
           {!loading && <span className='indicator-label'>Submit</span>}
           {loading && (
-            <span className='indicator-progress' style={{display: 'block'}}>
+            <span className='indicator-progress' style={{ display: 'block' }}>
               Please wait...{' '}
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
           )}
         </button>
-        <Link to='/auth/login'>
+        {/* <Link to='/auth/login'>
           <button
             type='button'
             id='kt_login_signup_form_cancel_button'
@@ -361,9 +394,22 @@ export function Registration() {
           >
             Cancel
           </button>
-        </Link>
+        </Link> */}
+        <div className='text-gray-500 text-center fw-semibold fs-6'>
+          Already have an account?{' '} &nbsp;
+          <Link to='/auth/login' className='link-primary'>
+            Sign In
+          </Link>
+        </div>
       </div>
       {/* end::Form group */}
     </form>
   )
 }
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    signUpDispatch: (data: signUpData, successCallback: Function, failureCallback: Function) =>
+      dispatch(signUpAction(data, successCallback, failureCallback))
+  }
+}
+export default connect(null, mapDispatchToProps)(Registration)

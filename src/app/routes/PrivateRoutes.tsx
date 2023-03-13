@@ -1,46 +1,27 @@
-import {lazy, FC, Suspense} from 'react'
 import {Route, Routes, Navigate} from "react-router-dom"
 import {MasterLayout} from '../../_metronic/layout/MasterLayout'
-import TopBarProgress from 'react-topbar-progress-indicator'
 import {DashboardWrapper} from '../components/pages/dashboard/DashboardWrapper'
-import {MenuTestPage} from '../components/pages/MenuTestPage'
-import {getCSSVariableValue} from '../../_metronic/assets/ts/_utils'
-import {WithChildren} from '../../_metronic/helpers'
-import BuilderPageWrapper from '../components/pages/layout-builder/BuilderPageWrapper'
-import AddUser from '../components/pages/addUser/AddUser'
+import AddUser from '../components/pages/user/AddUser'
+import { Error404 } from '../components/pages/errors/components/Error404'
+import { ADD_USER, DASHBOARD, PROFILE_PAGE, USER_LIST } from '../helpers/routes'
+import { absolutePath } from '../helpers/relativePath'
+import UserList from '../components/pages/user/UserList'
+import  ProfilePage  from "../components/pages/profile/ProfilePage"
 
 const PrivateRoutes = () => {
-  // const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
-  // const WizardsPage = lazy(() => import('../modules/wizards/WizardsPage'))
-  // const AccountPage = lazy(() => import('../modules/accounts/AccountPage'))
-  // const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
-  // const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
-  // const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
 
   return (
     <Routes>
       <Route element={<MasterLayout />}>
-        <Route path='auth/*' element={<Navigate to='/dashboard' />} />
-        <Route path='dashboard' element={<DashboardWrapper />} />
-        <Route path='builder' element={<BuilderPageWrapper />} />
-        <Route path='menu-test' element={<MenuTestPage />} />
-        <Route path='add-user' element={<AddUser/>}/>
-        <Route path='*' element={<Navigate to='/error/404' />} />
+        <Route path='auth/*' element={<Navigate to={absolutePath(DASHBOARD)} />} />
+        <Route path={DASHBOARD} element={<DashboardWrapper />} />
+        <Route path={ADD_USER} element={<AddUser/>}/>
+        <Route path={USER_LIST} element={<UserList/>}/>
+        <Route path={PROFILE_PAGE} element={<ProfilePage/>}/>
+        <Route path='*' element={<Error404/>} />
       </Route>
     </Routes>
   )
-}
-
-const SuspensedView: FC<WithChildren> = ({children}) => {
-  const baseColor = getCSSVariableValue('--kt-primary')
-  TopBarProgress.config({
-    barColors: {
-      '0': baseColor,
-    },
-    barThickness: 1,
-    shadowBlur: 5,
-  })
-  return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>
 }
 
 export {PrivateRoutes}

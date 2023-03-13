@@ -1,8 +1,9 @@
 import {Route, Routes} from 'react-router-dom'
-import {Registration} from './components/Registration'
+import Registration from './components/Registration'
 import {ForgotPassword} from './components/ForgotPassword'
-import {Login} from './components/Login'
+import Login from './components/Login'
 import {AuthLayout} from './AuthLayout'
+import { Error404 } from '../errors/components/Error404'
 
 const AuthPage = () => (
   <Routes>
@@ -12,6 +13,7 @@ const AuthPage = () => (
       <Route path='forgot-password' element={<ForgotPassword />} />
       <Route index element={<Login />} />
     </Route>
+      <Route path='*' element={<Error404/>} />
   </Routes>
 )
 
