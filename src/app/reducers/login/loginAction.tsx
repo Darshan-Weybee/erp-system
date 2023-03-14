@@ -10,9 +10,9 @@ export const loginAction = (data: loginData, successCallback : Function, failure
 
         await loginService(data).then(
             (result: any) => {
+                console.log(result)
                 dispatch(success(LOGIN_SUCCESS, result))
-                successCallback(result);
-                dispatch(getProfileData())
+                successCallback(result.data.data.records);
             },
             (error: any) => {
                 dispatch(failure(LOGIN_FAILURE, error.message))

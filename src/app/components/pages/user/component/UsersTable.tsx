@@ -3,7 +3,6 @@ import { connect } from "react-redux"
 import { KTCardBody } from "../../../../../_metronic/helpers"
 import { getUserList } from "../../../../reducers/user/userAction"
 import { userListState } from "../../../../reducers/user/userListReducer"
-import { CustomHeaderColumn } from "./CustomHeaderColumn"
 import { CustomRow } from "./CustomRow"
 import { UserCustomHeader } from "./UserCustomHeader"
 
@@ -29,12 +28,13 @@ const HEADERS = [
  interface props {
     userListDetails : userListState
     getUserList : Function
+    companyId : number
  }
 
-const UsersTable:FC<props> = ({getUserList, userListDetails}) => {
+const UsersTable:FC<props> = ({companyId, getUserList, userListDetails}) => {
 
     useEffect(() => {
-        getUserList();
+        getUserList(companyId);
     },[])
 
   return (
@@ -48,13 +48,13 @@ const UsersTable:FC<props> = ({getUserList, userListDetails}) => {
             <tr className='text-start text-muted fw-bolder fs-7 text-uppercase gs-0'>
               {HEADERS.map((column: any) => (
                 // <CustomHeaderColumn key={column.id} column={column} />
-                <UserCustomHeader title={column.columnName} className="min-w-125px"/>
+                <UserCustomHeader key={column.id} title={column.columnName} className="min-w-125px"/>
               ))}
             </tr>
           </thead>
           <tbody className='text-gray-600 fw-bold'>
-            {userListDetails?.userList?.data?.length > 0 ? (
-              userListDetails?.userList?.data?.map((row: any, i: number) => {
+            {userListDetails?.userList?.data?.records?.Employees.length > 0 ? (
+              userListDetails?.userList?.data?.records?.Employees.map((row: any, i: number) => {
                 return <CustomRow row={row} key={`row-${i}-${row.id}`} />
               })
             ) : (
@@ -75,13 +75,14 @@ const UsersTable:FC<props> = ({getUserList, userListDetails}) => {
 
 const mapStateToProps = (state: any) => {
     return {
-        userListDetails: state.userList
+        userListDetails: state.userList,
+        companyId : state.profile.profileData.CompanyId
     }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        getUserList: () => dispatch(getUserList())
+        getUserList: (companyId : number) => dispatch(getUserList(companyId))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(UsersTable)

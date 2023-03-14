@@ -1,5 +1,16 @@
-.img-fit-to-div{
+.img-fit-to-div {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.inValidBorder {
+    border-color: #f1416c !important;
+}
+
+.errorMsg {
+    margin: 7px;
+    color: red;
+    font-size: 14px;
+    font-weight: 400;
 }

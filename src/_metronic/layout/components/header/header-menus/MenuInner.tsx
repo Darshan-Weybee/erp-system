@@ -2,12 +2,16 @@
 import {MenuItem} from './MenuItem'
 import { absolutePath } from '../../../../../app/helpers/relativePath'
 import { USER_LIST } from '../../../../../app/helpers/routes'
+import hasPermission, { actionsRole } from '../../../../../app/components/pages/auth/core/permission'
 
 export function MenuInner() {
   // const intl = useIntl()
   return (
     <>
-    <MenuItem to={absolutePath(USER_LIST)} title='Users'/>
+     {/* <MenuItem to={absolutePath(USER_LIST)} title='Users'/> */}
+    {hasPermission(actionsRole.ADMIN) && <MenuItem to={absolutePath(USER_LIST)} title='Users'/>}
+
+
       {/* <MenuItem title={intl.formatMessage({id: 'MENU.DASHBOARD'})} to='/dashboard' /> */}
       {/* <MenuItem title='Layout Builder' to='/builder' /> */}
       {/* <MenuInnerWithSub

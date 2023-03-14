@@ -10,15 +10,8 @@ import { loginAction } from '../../../../reducers/login/loginAction'
 import { loginData } from '../../../../helpers/commonInterface'
 
 const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Wrong email format')
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+  email: Yup.string().email('Wrong email format').required('Email is required'),
+  password: Yup.string().required('Password is required'),
 })
 
 const initialValues = {
@@ -46,15 +39,15 @@ const Login: FC<props> = ({ loginDispatch }) => {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       setLoading(true)
       // try {
-        // login api call
-        await loginDispatch({ email: values.email, password: values.password },
-          (result: any) => { saveAuth(result); setCurrentUser(result) },
-          () => {
-            saveAuth(undefined)
-            setStatus('The login details are incorrect')
-            setSubmitting(false)
-            setLoading(false)
-          })
+      // login api call
+      await loginDispatch({ email: values.email, password: values.password },
+        (result: any) => { saveAuth(result); setCurrentUser(result) },
+        () => {
+          saveAuth(undefined)
+          setStatus('The login details are incorrect')
+          setSubmitting(false)
+          setLoading(false)
+        })
       // } catch (error) {
       //   console.error(error)
       //   saveAuth(undefined)
@@ -163,7 +156,9 @@ const Login: FC<props> = ({ loginDispatch }) => {
         />
         {formik.touched.email && formik.errors.email && (
           <div className='fv-plugins-message-container'>
-            <span role='alert'>{formik.errors.email}</span>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.email}</span>
+            </div>
           </div>
         )}
       </div>

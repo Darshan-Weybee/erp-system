@@ -1,13 +1,16 @@
 import clsx from 'clsx'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { connect } from 'react-redux'
 import ImageDisplay from '../../../../app/components/commonComponent/ImageDisplay'
-import {KTSVG, toAbsoluteUrl} from '../../../helpers'
-import {HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher} from '../../../partials'
-import {useLayout} from '../../core'
+import { PROFILE_PICTURE_API_ENDPOINT } from '../../../../app/helpers/config'
+import { getProfileData } from '../../../../app/reducers/profile/profileAction'
+import { KTSVG, toAbsoluteUrl } from '../../../helpers'
+import { HeaderNotificationsMenu, HeaderUserMenu, Search, ThemeModeSwitcher } from '../../../partials'
+import { useLayout } from '../../core'
 
 interface props {
-  profilePicture : any
+  profileDetails: any
+  getProfile: Function
 }
 
 const itemClass = 'ms-1 ms-lg-3'
@@ -16,8 +19,12 @@ const btnClass =
 const userAvatarClass = 'symbol-35px symbol-md-40px'
 const btnIconClass = 'svg-icon-1'
 
-const NavbarCom:FC<props> = ({profilePicture}) => {
-  const {config} = useLayout()
+const NavbarCom: FC<props> = ({ profileDetails, getProfile }) => {
+
+  useEffect(() => {
+    getProfile();
+  }, [])
+
   return (
     <div className='app-navbar flex-shrink-0'>
       {/* <div className={clsx('app-navbar-item align-items-stretch', itemClass)}>
@@ -60,7 +67,8 @@ const NavbarCom:FC<props> = ({profilePicture}) => {
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
         >
-          <ImageDisplay path={profilePicture} altText='profilePicture' className='' errorPath='/media/svg/avatars/blank.svg'/>
+          <ImageDisplay
+            path={`${PROFILE_PICTURE_API_ENDPOINT}?name=${profileDetails.profileData.FirstName} ${profileDetails.profileData.LastName}&color=ffffff&background=029ff7`}altText='profilePicture' className='' errorPath='/media/svg/avatars/blank.svg' />
         </div>
         <HeaderUserMenu />
       </div>
@@ -79,11 +87,17 @@ const NavbarCom:FC<props> = ({profilePicture}) => {
   )
 }
 
-const mapStateToProps = (state : any) => {
+const mapStateToProps = (state: any) => {
   return {
-    profilePicture : state.profile.profilePicture
+    profileDetails: state.profile
   }
 }
 
-const Navbar = connect(mapStateToProps)(NavbarCom)
-export {Navbar}
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    getProfile: () => dispatch(getProfileData())
+  }
+}
+
+const Navbar = connect(mapStateToProps, mapDispatchToProps)(NavbarCom)
+export { Navbar }

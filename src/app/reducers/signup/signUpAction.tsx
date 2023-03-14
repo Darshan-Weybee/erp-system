@@ -11,8 +11,7 @@ export const signUpAction = (data: signUpData, successCallback : Function, failu
         signUpService(data).then(
             (result: any) => {
                 dispatch(success(SIGNUP_SUCCESS, result))
-                successCallback(result)
-                dispatch(getProfileData())
+                successCallback(result.data.records)
             },
             (error: any) => {
                 dispatch(failure(SIGNUP_FAILURE, error.message))

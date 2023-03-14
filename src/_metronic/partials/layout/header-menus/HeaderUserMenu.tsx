@@ -5,7 +5,8 @@ import ImageDisplay from '../../../../app/components/commonComponent/ImageDispla
 import { connect } from 'react-redux'
 import { profileState } from '../../../../app/reducers/profile/profileReducer'
 import { absolutePath } from '../../../../app/helpers/relativePath'
-import { PROFILE_PAGE } from '../../../../app/helpers/routes'
+import { PROFILE_PAGE, RESET_PASSWORD_PAGE } from '../../../../app/helpers/routes'
+import { PROFILE_PICTURE_API_ENDPOINT } from '../../../../app/helpers/config'
 
 interface props {
   profileDetails: profileState
@@ -21,16 +22,18 @@ const HeaderUserMenuCom: FC<props> = ({ profileDetails }) => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <ImageDisplay path={profileDetails.profilePicture} altText='profilePicture' className='' errorPath='/media/svg/avatars/blank.svg' />
+            <ImageDisplay path={`${PROFILE_PICTURE_API_ENDPOINT}?name=${profileDetails.profileData.FirstName} ${profileDetails.profileData.LastName}&color=ffffff&background=029ff7`} altText='profilePicture' className='' errorPath='/media/svg/avatars/blank.svg' />
           </div>
 
           <div className='d-flex flex-column'>
             <div className='fw-bolder d-flex align-items-center fs-5'>
-              {profileDetails?.profileData?.name ? profileDetails.profileData.name : "User Name"}
+              {profileDetails?.profileData?.FirstName ?
+              <>{profileDetails.profileData.FirstName} {profileDetails.profileData.LastName}</> 
+              : "User Name"}
             </div>
-            {/* <a href='#' className='fw-bold text-muted text-hover-primary fs-7'>
-              {currentUser?.email}
-            </a> */}
+            <div className='fw-bold text-muted text-hover-primary fs-7'>
+              {profileDetails.profileData.Email || "abc@gmail.com"}
+            </div>
           </div>
         </div>
       </div>
@@ -40,6 +43,11 @@ const HeaderUserMenuCom: FC<props> = ({ profileDetails }) => {
       <div className='menu-item px-5'>
         <Link to={absolutePath(PROFILE_PAGE)} className='menu-link px-5'>
           My Profile
+        </Link>
+      </div>
+      <div className='menu-item px-5'>
+        <Link to={absolutePath(RESET_PASSWORD_PAGE)} className='menu-link px-5'>
+          Change Password
         </Link>
       </div>
 

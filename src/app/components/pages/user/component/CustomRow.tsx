@@ -12,7 +12,7 @@ type Props = {
 
 const CustomRow: FC<Props> = ({row}) => (
   <tr>
-    <td><UserInfoCell firstName={row.firstName} lastName={row.lastName} email={row.email}/></td>
+    <td><UserInfoCell firstName={row.FirstName} lastName={row.LastName} email={row.Email}/></td>
     <td>Employee</td>
     <td>12/10/2022</td>
     <td><UserActionsCell/></td>

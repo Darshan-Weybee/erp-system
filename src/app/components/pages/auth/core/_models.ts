@@ -1,6 +1,13 @@
 export interface AuthModel {
-  api_token: string
+  Token: string
+  // api_token: string
   refreshToken?: string
+  Roles : Array<string>
+  PhoneNumber : string | null
+  LastName : string
+  FirstName : string
+  Email : string
+  CompanyDetails : string | null
 }
 
 export interface UserAddressModel {
@@ -54,7 +61,7 @@ export interface UserModel {
   occupation?: string
   companyName?: string
   phone?: string
-  roles?: Array<number>
+  Roles?: Array<string>
   pic?: string
   language?: 'en' | 'de' | 'es' | 'fr' | 'ja' | 'zh' | 'ru'
   timeZone?: string

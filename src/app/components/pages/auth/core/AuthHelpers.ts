@@ -1,6 +1,9 @@
+import { AxiosRequestConfig } from 'axios'
+import { axiosInstance } from '../../../../reducers/axiosInstance'
 import {AuthModel} from './_models'
 
 const AUTH_LOCAL_STORAGE_KEY = 'kt-auth-react-v'
+const AUTH_LOCAL_STORAGE_ROLE = "role"
 const getAuth = (): AuthModel | undefined => {
   if (!localStorage) {
     return
@@ -48,12 +51,13 @@ const removeAuth = () => {
 }
 
 export function setupAxios(axios: any) {
-  axios.defaults.headers.Accept = 'application/json'
-  axios.interceptors.request.use(
-    (config: {headers: {Authorization: string}}) => {
+  // axios.defaults.headers.Accept = 'application/json'
+  axiosInstance.interceptors.request.use(
+    (config: AxiosRequestConfig) => {
       const auth = getAuth()
-      if (auth && auth.api_token) {
-        config.headers.Authorization = `Bearer ${auth.api_token}`
+      if (auth && auth.Token && config.headers) {
+        console.log(auth)
+        config.headers.Authorization = `Bearer ${auth.Token}`
       }
 
       return config

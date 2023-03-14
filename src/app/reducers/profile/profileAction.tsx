@@ -3,9 +3,9 @@ import { EDIT_PROFILE_FAILURE, EDIT_PROFILE_REQUEST, EDIT_PROFILE_SUCCESS, GET_P
 import { failure, request, success } from "../dispatchFunctions"
 import { editProfileService, getProfileDataService, getProfilePictureService } from "./profileService"
 
-export const getProfilePicture = (name: string) => {
+export const getProfilePicture = (firstName: string, lastName : string) => {
     return async (dispatch: any) => {
-        await getProfilePictureService(name).then(
+        await getProfilePictureService(firstName, lastName).then(
             (result: any) => dispatch(success(GET_PROFILE_PICTURE, result.data))
         )
     }
@@ -17,8 +17,8 @@ export const getProfileData = () => {
 
         await getProfileDataService().then(
             (result: any) => {
-                dispatch(success(GET_PROFILE_SUCCESS, result.data));
-                dispatch(getProfilePicture(result.data.name));
+                dispatch(success(GET_PROFILE_SUCCESS, result.data.data.records));
+                dispatch(getProfilePicture(result.data.data.records.FirstName, result.data.data.records.LastName));
             },
             (error: any) => dispatch(failure(GET_PROFILE_FAILURE, error.message))
         )

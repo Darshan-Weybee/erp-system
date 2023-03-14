@@ -26,4 +26,5 @@ export interface editProfileData {
     password: string,
     firstName?: string,
     lastName?: string,
+    newPassword?:string
 }
